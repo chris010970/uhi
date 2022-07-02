@@ -1,0 +1,40 @@
+request:
+    evalscript: |
+                //VERSION=3                 
+                function setup() {
+                    return {
+                        input: [{
+                            bands: [
+                                "B10",
+                                "BQA",
+                                "dataMask"
+                            ]
+                        }],
+                        output: [
+                        {
+                            id: "stats",
+                            bands: [  "lst" ],
+                            sampleType: "FLOAT32"
+                        },
+                        {
+                            id: "dataMask",
+                            bands: 1
+                        }]
+                    }
+                }
+                function evaluatePixel(samples) {                                
+                    return {
+                        stats: [ samples.B10 ], 
+                        dataMask: [ samples.dataMask * ( decodeL8C2Qa(samples.BQA).clear * ( 1 - decodeL8C2Qa(samples.BQA).water ) ) ],
+                    }
+                }
+    inputs:
+        - collection: LANDSAT_OT_L2
+          mosaic:
+            order: leastRecent
+responses:
+    default:
+        statistics:
+            default:
+                percentiles:
+                    k: [ 33, 50, 75, 90 ]
