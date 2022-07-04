@@ -8,9 +8,7 @@ Better characterization and understanding of the UHI effects are critically impo
 
 To quantify urban heat island effect from satellite thermal image analysis, individual pixels are classified as urban and non-urban based on their location and predominant land cover type. Having classified pixels into two subsets, satellite derived surface UHI indicator is typically calculated as the difference between mean urban land surface temperature and mean non-urban land surface temperature.
 
-Notebooks in this repository demonstrate automated calculation of seasonal surface UHI effect impacting the city of Bristol using archived time series of Landsat 8/9 thermal datasets accessed via (Sentinel-Hub)[https://www.sentinel-hub.com/] platform / APIs.  
-
+[Notebooks](https://nbviewer.org/github/chris010970/uhi/blob/main/notebooks/uhi.ipynb) in this repository demonstrate automated calculation of seasonal surface UHI effect impacting the city of Bristol using archived time series of Landsat 8/9 thermal datasets accessed via [Sentinel-Hub](https://www.sentinel-hub.com/) platform / APIs.
 
 ### Useful Links
-------------
 NASA ARSET Presentation: [Satellite Remote Sensing for Urban Heat Islands](https://appliedsciences.nasa.gov/sites/default/files/2020-11/UHI_Part1_v5.pdf).
