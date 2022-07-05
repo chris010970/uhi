@@ -1,0 +1,42 @@
+request:
+    evalscript: |
+                //VERSION=3                 
+                function setup() {
+                    return {
+                        input: [{
+                            bands: [
+                                "S7", 
+                                "S8", 
+                                "S9", 
+                                "dataMask"
+                            ]
+                        }],
+                        output: [
+                        {
+                            id: "stats",
+                            bands: [  "s7", "s8", "s9" ],
+                            sampleType: "UINT16"
+                        },
+                        {
+                            id: "dataMask",
+                            bands: 1
+                        }]
+                    }
+                }
+                function evaluatePixel(samples) {                                
+
+                    // threshold on the NIR reflectance for cloud masking (ρt 865 nm > 0.027) - borrowed from SeaDAS/l2gen
+                    var cloud_mask = 1.0;
+                    return {
+                        stats: [ samples.S7, samples.S8, samples.S9 ], 
+                        dataMask: [ samples.dataMask * ( 1.0 - cloud_mask ) ],
+                    }
+                }
+    inputs:
+        - collection: SENTINEL3_SLSTR
+responses:
+    default:
+        statistics:
+            default:
+                percentiles:
+                    k: [ 33, 50, 75, 90 ]
