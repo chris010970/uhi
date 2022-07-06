@@ -1,0 +1,50 @@
+request:
+    evalscript: |
+                //VERSION=3 
+                function setup() {
+                    return {
+                        input: [{
+                            bands: [
+                                "B01",
+                                "B02",
+                                "B03",
+                                "B06",
+                                "SR_CLOUD_QA",
+                                "dataMask"
+                            ]
+                        }],
+                        output: [{
+                            id: "rgb",
+                            bands: 3,
+                            sampleType: "AUTO"
+                        },
+                        {
+                            id: "lst",
+                            bands: 1,
+                            sampleType: "FLOAT32"
+                        },
+                        {
+                            id: "data_mask",
+                            bands: 3,
+                            sampleType: "UINT8"
+                        } ]
+                    }
+                }                 
+                function evaluatePixel(samples) {                
+                
+                    var qaMask = samples.dataMask * ( samples.SR_CLOUD_QA < 2 )
+                
+                    return {
+                        rgb: [ samples.B03 * 2.5, samples.B02 * 2.5, samples.B01 * 2.5 ],
+                        lst: [ samples.B06 ], 
+                        data_mask: [ samples.dataMask, samples.SR_CLOUD_QA, qaMask ],
+                    }
+                }
+    inputs:
+        - collection: LANDSAT_TM_L2
+          mosaic:
+            order: leastRecent
+responses:
+    rgb: TIFF
+    lst: TIFF
+    data_mask: TIFF

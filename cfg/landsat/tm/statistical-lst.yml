@@ -1,0 +1,43 @@
+request:
+    evalscript: |
+                //VERSION=3                 
+                function setup() {
+                    return {
+                        input: [{
+                            bands: [
+                                "B06",
+                                "SR_CLOUD_QA",
+                                "dataMask"
+                            ]
+                        }],
+                        output: [
+                        {
+                            id: "stats",
+                            bands: [  "lst" ],
+                            sampleType: "FLOAT32"
+                        },
+                        {
+                            id: "dataMask",
+                            bands: 1
+                        }]
+                    }
+                }
+                function evaluatePixel(samples) {                                
+
+                    // combine nodata mask with cloud / water / snow qa mask 
+                    var qaMask = samples.dataMask * ( samples.SR_CLOUD_QA < 2 )
+                    return {
+                        stats: [ samples.B06 ], 
+                        dataMask: [ qaMask ],
+                    }
+                }
+    inputs:
+        - collection: LANDSAT_TM_L2
+          mosaic:
+            order: leastRecent
+responses:
+    default:
+        statistics:
+            default:
+                percentiles:
+                    k: [ 33, 50, 75, 90 ]
